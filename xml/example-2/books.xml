@@ -1,0 +1,23 @@
+<!--?xml version="1.0" encoding="utf-8" ?-->
+<recentbooks>
+ <book>
+ <title>Обработка XML</title>
+ <description>Полезно вебмастерам и...</description>
+ <date>12/1/2013</date>
+ </book>
+ <book>
+ <title>Высшая математика</title>
+ <description>Методичка с подробными...</description>
+ <date>4/1/2013</date>
+ </book>
+ <book>
+ <title>Дискретная математика</title>
+ <description>Формулы, примеры...</description>
+ <date>6/2/2013</date>
+ </book>
+ <book>
+ <title>Программирование</title>
+ <description>Базовые алгоритмы...</description>
+ <date>14/2/2013</date>
+ </book>
+</recentbooks>
