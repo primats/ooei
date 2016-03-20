@@ -1,0 +1,154 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<script type="text/javascript">
+
+// basic function for loading an XML file
+function loadXML(file) {
+ try {
+ // firefox, mozilla, opera, IE7/8 etc... 
+ var req = new XMLHttpRequest();
+ req.open("GET", file, false);
+ req.send(null);
+ return req.responseXML;
+ }
+ catch (e) {
+ try {
+ // internet explorer 4/5/6
+ var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+ xmlDoc.async = false;
+ xmlDoc.load(file);
+ return xmlDoc;
+ }
+ catch (e) {
+ alert(e.message);
+ return null;
+ }
+ }
+} 
+
+</script>
+</head>
+<body>
+
+<a name="I-12-1" id="I-12-1" href="#" onmouseover="showSelectedCategory(this)"
+style="color: blue">Список студентов группы I-12-1</a> <br /> 
+<a name="I-11-1" id="I-11-1" href="#" onmouseover="showSelectedCategory(this)"
+style="color: red">Список студентов группы I-11-1</a> <br /> 
+<a name="I-10-1" id="I-10-1" href="#" onmouseover="showSelectedCategory(this)"
+style="color: green">Список студентов группы I-10-1</a> <hr/> 
+
+<br /> 
+
+<!-- Following divs will display the data from the XML file.
+ Dropdown boxes would work just as well -->
+
+<div name="fio0" id="fio0"></div>
+<div name="average0" id="average0"></div>
+<div name="id0" id="id0"></div>
+
+<br /> <br />
+
+<div name="fio1" id="fio1"></div>
+<div name="average1" id="average1"></div>
+<div name="id1" id="id1"></div>
+
+<br /> <br />
+
+<div name="fio2" id="fio2"></div>
+<div name="average2" id="average2"></div>
+<div name="id2" id="id2"></div>
+
+<br /> <br />
+
+<div name="fio" id="fio3"></div>
+<div name="average3" id="average3"></div>
+<div name="id3" id="id3"></div>
+
+<script type="text/javascript">
+
+var xmlDoc = loadXML("http://primat.org/OOEI/student.xml");
+
+function showSelectedCategory(coloredLink) {
+
+ // coloredLink's name is passed in with onmouseover
+ // and is assigned to the variable category.
+ // category could either be 'I-12-1', 'I-11-1', or 'I-10-1'
+
+ var group = coloredLink.name;
+
+ // Create a variable called categoryCounter
+ // to use in the following for-loop.
+
+ var categoryCounter = 0;
+
+ // # of div sections. Example: 0,1,2,3 so that's 4
+
+ var divNum = 4; 
+
+ // Start the loop at 0 by convention and increment the variable i by
+ // 1 until it reaches the length of xmlDoc.getElementsByTagName("product")
+ // In this case the length is 9 because the XML file has 9 products.
+
+ for (var i = 0; i < xmlDoc.getElementsByTagName("student").length; i++) {
+
+ // The following 3 variables will end up looking something like
+ // item0, item1, item2, item3, price0, price1, and so on...
+ // These variables are set to correspond with the id's of the
+ // divs above, which will display the data pulled from the XML file.
+ // Notice the variables are created with the variable
+ // categoryCounter rather than the variable i.
+ // categoryCounter counts the number of times in the loop
+ // that the product matches the category variable.
+ // For category A, categoryCounter would begin at 0 and
+ // reach 1 - that's 2 products.
+ // For category B, categoryCounter would begin at 0 and
+ // reach 2 - that's 3 products.
+ // Remember to start counting from 0, not from 1
+
+ var fio = "fio" + categoryCounter;
+ var average = "average" + categoryCounter;
+ var id = "id" + categoryCounter;
+
+ // if the category variable matches a category in the XML file...
+ if (xmlDoc.getElementsByTagName("student")
+ [i].attributes.getNamedItem("group").nodeValue == group) { 
+
+ // assign the XML data in the category to the divs for display
+ document.getElementById(fio).innerHTML =
+ xmlDoc.getElementsByTagName("fio")[i].childNodes[0].nodeValue;
+ document.getElementById(average).innerHTML =
+ xmlDoc.getElementsByTagName("average")[i].childNodes[0].nodeValue;
+ document.getElementById(id).innerHTML =
+ xmlDoc.getElementsByTagName("id")[i].childNodes[0].nodeValue;
+
+ // increment by 1 each time the category matches
+ categoryCounter++;
+
+ } // end if
+
+ } // end for-loop
+
+ // straggler variable is old data that should be cleared 
+
+ for (var straggler = categoryCounter; straggler < divNum; straggler++) {
+
+ // these variables get assigned new values 
+
+ fio = "fio" + straggler;
+ average = "average" + straggler;
+ id = "id" + straggler; 
+
+ // set to blank
+
+ document.getElementById(fio).innerHTML = "";
+ document.getElementById(average).innerHTML = "";
+ document.getElementById(id).innerHTML = "";
+
+ }
+
+}
+</script>
+</body>
+</html>
