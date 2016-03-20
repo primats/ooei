@@ -1,0 +1,47 @@
+<students>
+<student group="I-12-1">
+<fio>Програмістов Юрій Петрович</fio>
+<average>34.50</average>
+<id>1000</id>
+</student>
+<student group="I-12-1">
+<fio>Аштемеелкін Сидір Львовіч</fio>
+<average>32.25</average>
+<id>1001</id>
+</student>
+<student group="I-12-1">
+<fio>Жаваскрипский Антон Жаргонович</fio>
+<average>39.50</average>
+<id>1100</id>
+</student>
+<student group="I-11-1">
+<fio>Делфійский Андрій Делетович</fio>
+<average>39.25</average>
+<id>1101</id>
+</student>
+<student group="I-11-1">
+<fio>Сапортов Емануїл Файлович</fio>
+<average>41.25</average>
+<id>1102</id>
+</student>
+<student group="I-10-1">
+<fio>Кременчугов Сергій Паскальович</fio>
+<average>44.50</average>
+<id>1200</id>
+</student>
+<student group="I-10-1">
+<fio>Лодирєв Роман Еррорович</fio>
+<average>47.25</average>
+<id>1201</id>
+</student>
+<student group="I-10-1">
+<fio>Кодоров Тимур Компільович</fio>
+<average>57.25</average>
+<id>1202</id>
+</student>
+<student group="I-10-1">
+<fio>Студентенко Акакій Досович</fio>
+<average>62.25</average>
+<id>1203</id>
+</student>
+</students>
