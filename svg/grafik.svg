@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" 
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ width="560" height="480" 
+ onload="Init( evt )" >
+
+<script type="text/ecmascript">
+//<![CDATA[
+
+var svgXLink = "http://www.w3.org/1999/xlink";
+var svgNS = "http://www.w3.org/2000/svg";
+var svgRoot;
+var fPlot;
+var time=0;
+var npoints=300;
+var nplotpoints=600;
+var bRunning=0;
+var period=2*Math.PI;
+
+function Init(){
+ svgRoot = document.documentElement;
+ fPlot = document.getElementById("fplot");
+ myCirc = document.getElementById("mycirc");
+ makePlot();
+ makeTicks();
+ myCirc.setAttributeNS(null, "cx", xFunc(0));
+ myCirc.setAttributeNS(null, "cy", yFunc(0));
+ setInterval('doUpdate()',25);
+}
+
+/*
+* The x and y functions which determine the parametric curve
+*/
+function xFunc(t){
+ return 4*(Math.sin(4*t)-.3)*Math.cos(2*t);
+}
+function yFunc(t){
+ return 4*(Math.sin(4*t)-.3)*Math.sin(2*t);
+}
+
+function makePlot(){
+ var dstring="M"+xFunc(0)+","+yFunc(0)+" ";
+ for(t=0;t<nplotpoints;t++){
+ dstring=dstring+"L"+xFunc(period*(t+1)/nplotpoints)+","+yFunc(period*(t+1)/nplotpoints)+" ";
+ }
+ fPlot.setAttributeNS(null, "d", dstring);
+}
+
+function onMouseUp(evt){
+ if (bRunning){
+ bRunning=0;
+ } else {
+ bRunning=1;
+ }
+}
+
+function doUpdate(){
+ if(bRunning){
+ var tempX = xFunc(period*time/npoints);
+ var tempY = yFunc(period*time/npoints);
+ myCirc.setAttributeNS(null, "cx", tempX);
+ myCirc.setAttributeNS(null, "cy", tempY);
+ if(time < npoints){
+ time++;
+ } else {
+ time = time-npoints;
+ time++;
+ }
+ }
+}
+
+function makeTicks(){
+ var xyaxes = document.getElementById("xyaxes");
+ for(j=-5;j<6;j++){
+ var xticks = document.createElementNS(svgNS,"use");
+ var yticks = document.createElementNS(svgNS,"use");
+ xticks.setAttributeNS(null, "x", j);
+ xticks.setAttributeNS(svgXLink, "xlink:href", "#xtick");
+ yticks.setAttributeNS(null, "y", j);
+ yticks.setAttributeNS(svgXLink, "xlink:href", "#ytick");
+ xyaxes.appendChild(xticks);
+ xyaxes.appendChild(yticks);
+ }
+}
+
+// ]]></script>
+
+<defs>
+ <style type="text/css"><![CDATA[
+ .axes {fill:none;stroke:rgb(50%, 10%, 10%);stroke-width:.035}
+ .functionplot {fill:none;stroke:rgb(40%, 80%, 60%);stroke-width:.05}
+ .movingpoint{fill:#ffdddd; stroke:red; stroke-width:.05}
+ .xlabels { font-size:30px; font-weight: bold; font-family: Arial; 
+ stroke: none; fill: black; text-anchor: middle}
+ .ylabels{ font-size:30px; font-weight: bold; font-family: Arial; 
+ stroke: none; fill: black; text-anchor: end}
+ ]]></style>
+ <line id="xtick" class="axes" x1="0" y1="-.12" x2="0" y2=".12"/>
+ <line id="ytick" class="axes" x1="-.12" y1="0" x2=".12" y2="0"/>
+</defs>
+
+
+<g transform="matrix(40, 0, 0, -40, 280, 240)">
+<rect x="-6" y="-6" width="12" height="12" style="fill:#ffffff; stroke:none"/>
+ <g id="xyaxes" class="axes">
+ <line x1="-5.5" y1="0" x2="5.5" y2="0"/>
+ <line x1="0" y1="-5.5" x2="0" y2="5.5"/>
+ </g>
+ <g class="xlabels" transform="translate(0,-.4) scale(.01,-.01)" > 
+ <text x="100">1</text>
+ <text x="200">2</text>
+ <text x="300">3</text>
+ <text x="400">4</text>
+ <text x="500">5</text>
+ <text x="-100">-1</text>
+ <text x="-200">-2</text>
+ <text x="-300">-3</text>
+ <text x="-400">-4</text>
+ <text x="-500">-5</text>
+ </g>
+ <g class="ylabels" transform="translate(-.15,-.12) scale(.01,-.01)" > 
+ <text style="font-size:30px" y="-100">1</text>
+ <text y="-200">2</text>
+ <text y="-300">3</text>
+ <text y="-400">4</text>
+ <text y="-500">5</text>
+ <text y="100">-1</text>
+ <text y="200">-2</text>
+ <text y="300">-3</text>
+ <text y="400">-4</text>
+ <text y="500">-5</text>
+ </g>
+ <path id="fplot" class="functionplot" d=""></path>
+ <circle id="mycirc" class="movingpoint" cx="0" cy="0" r=".1"/>
+ <rect id="canvas" x="-5.4" y="-5.4" width="10.8" height="10.8" opacity="0" 
+ pointer-events="visible"
+ onmouseup="onMouseUp(evt)"/>
+
+</g>
+</svg>
