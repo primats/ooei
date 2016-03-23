@@ -12,3 +12,9 @@ html-файл шаблона: html-email.html
 ## 2) XML: примеры парсинга xml-файлов
 
 Демо-пример парсинга можно посмотреть здесь: http://primat.org/OOEI/studparser.htm
+
+## 3) SVG: примеры векторной графики и анимации с использованием JavaScript
+
+Демо-примеры:
+полярный график - http://primat.org/news/grafik_funkcii_v_formate_svg/2016-03-23-1157
+система координат - http://primat.org/news/primer_svg_animacii/2016-03-23-1156
