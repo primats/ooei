@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" 
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ width="560" height="480" 
+ onload="Init( evt )" >
+
+<script type="text/ecmascript">
+//<![CDATA[
+
+var svgXLink = "http://www.w3.org/1999/xlink";
+var svgNS = "http://www.w3.org/2000/svg";
+var svgRoot;
+var mouseP, newP, oldP1, oldP2;
+var bmousedown = 0;
+var bPoint1;
+var gPoint1, gPoint2, myLine;
+
+function Init(){
+ svgRoot = document.documentElement;
+ mouseP = svgRoot.createSVGPoint();
+ newP = svgRoot.createSVGPoint();
+ newP.x = 3;
+ newP.y = 2;
+ oldP1 = svgRoot.createSVGPoint();
+ oldP1.x = 3;
+ oldP1.y = 2;
+ oldP2 = svgRoot.createSVGPoint();
+ oldP2.x = -3;
+ oldP2.y = 2;
+ gPoint1 = document.getElementById("gPoint1");
+ gPoint2 = document.getElementById("gPoint2");
+ myLine = document.getElementById("myLine");
+ makeGridLines();
+ makeTicks();
+}
+
+/* 
+* Returns the mouse coordinates as an SVGPoint
+*/
+function getMouse(evt){
+ var position = svgRoot.createSVGPoint();
+ position.x = evt.clientX;
+ position.y = evt.clientY;
+ return position;
+}
+/* 
+* Converts a mouse point to svg "user coordinates".
+*/
+function getUserCoordinates(p1){
+ var p1;
+ var p2 = svgRoot.createSVGPoint();
+ p2.x = p1.x/40 -7;
+ p2.y = 6-p1.y/40;
+ return p2;
+}
+/* 
+* Returns the distance between two SVGPoints. This is used to determine which
+* point snaps to the mouse.
+*/
+function distance(p1,p2){
+ var p1, p2;
+ var d = Math.sqrt(Math.pow(p2.x-p1.x,2)+Math.pow(p2.y-p1.y,2));
+ return d;
+}
+
+
+function onMouseDown(evt){
+ bmousedown=1;
+ mouseP=getMouse(evt);
+ newP=getUserCoordinates(mouseP);
+ var dp1 = distance(newP, oldP1);
+ var dp2 = distance(newP, oldP2);
+ if (dp1 >= dp2){bPoint1 = 0;}
+ else {bPoint1 = 1;}
+ doUpdate();
+}
+function onMouseMove(evt){
+ if(bmousedown){
+ mouseP=getMouse(evt);
+ newP=getUserCoordinates(mouseP);
+ doUpdate();
+ }
+}
+function onMouseUp(evt){
+ bmousedown=0;
+ newP.x=Math.round(newP.x);
+ newP.y=Math.round(newP.y);
+ doUpdate();
+}
+function doUpdate(){
+ if (bPoint1){
+ oldP1 = newP;
+ gPoint1.setAttributeNS(null, "cx", newP.x );
+ gPoint1.setAttributeNS(null, "cy", newP.y );
+ }
+ else{
+ oldP2 = newP;
+ gPoint2.setAttributeNS(null, "cx", newP.x );
+ gPoint2.setAttributeNS(null, "cy", newP.y );
+ }
+// Update the line to track the points
+ var dx=oldP2.x-oldP1.x;
+ var dy=oldP2.y-oldP1.y;
+ var linex2=oldP2.x+5*dx;
+ var liney2=oldP2.y+5*dy;
+ var linex1=oldP1.x-5*dx;
+ var liney1=oldP1.y-5*dy;
+ myLine.setAttribute("x1", linex1 );
+ myLine.setAttribute("y1", liney1 );
+ myLine.setAttribute("x2", linex2 );
+ myLine.setAttribute("y2", liney2 );
+}
+
+function makeGridLines(){
+ var grid = document.getElementById("grid");
+ for(j=-5;j<6;j++){
+ var xgridlines = document.createElementNS(svgNS,"use");
+ var xgridlines2 = document.createElementNS(svgNS,"use");
+ var ygridlines = document.createElementNS(svgNS,"use");
+ var ygridlines2 = document.createElementNS(svgNS,"use");
+ xgridlines.setAttributeNS(null, "x", j);
+ xgridlines.setAttributeNS(svgXLink, "xlink:href", "#xgridline");
+ xgridlines2.setAttributeNS(null, "x", j);
+ xgridlines2.setAttributeNS(svgXLink, "xlink:href", "#xgridline2");
+ ygridlines.setAttributeNS(null, "y", j);
+ ygridlines.setAttributeNS(svgXLink, "xlink:href", "#ygridline");
+ ygridlines2.setAttributeNS(null, "y", j);
+ ygridlines2.setAttributeNS(svgXLink, "xlink:href", "#ygridline2");
+ grid.appendChild(xgridlines);
+ grid.appendChild(ygridlines);
+ grid.appendChild(xgridlines2);
+ grid.appendChild(ygridlines2);
+ }
+}
+function makeTicks(){
+ var xyaxes = document.getElementById("xyaxes");
+ for(j=-5;j<6;j++){
+ var xticks = document.createElementNS(svgNS,"use");
+ var yticks = document.createElementNS(svgNS,"use");
+ xticks.setAttributeNS(null, "x", j);
+ xticks.setAttributeNS(svgXLink, "xlink:href", "#xtick");
+ yticks.setAttributeNS(null, "y", j);
+ yticks.setAttributeNS(svgXLink, "xlink:href", "#ytick");
+ xyaxes.appendChild(xticks);
+ xyaxes.appendChild(yticks);
+ }
+}
+
+// ]]></script>
+
+<defs>
+ <style type="text/css"><![CDATA[
+ .axes {fill:none;stroke:rgb(50%, 10%, 10%);stroke-width:.035}
+ .gridlines {fill:none;stroke:rgb(70%, 70%, 70%);stroke-width:.02}
+ .xlabels { font-size:30px; font-weight: bold; font-family: Arial; 
+ stroke: none; fill: black; text-anchor: middle}
+ .ylabels{ font-size:30px; font-weight: bold; font-family: Arial; 
+ stroke: none; fill: black; text-anchor: end}
+ ]]></style>
+ <line id="xtick" class="axes" x1="0" y1="-.12" x2="0" y2=".12"/>
+ <line id="ytick" class="axes" x1="-.12" y1="0" x2=".12" y2="0"/>
+ <line id="xgridline" class="gridlines" x1="0" y1="0" x2="0" y2="5.4"/>
+ <line id="xgridline2" class="gridlines" x1="0" y1="-5.4" x2="0" y2="-.5"/>
+ <line id="ygridline" class="gridlines" x1="0" y1="0" x2="5.4" y2="0"/>
+ <line id="ygridline2" class="gridlines" x1="-5.4" y1="0" x2="-.5" y2="0"/>
+</defs>
+
+
+<g transform="matrix(40, 0, 0, -40, 280, 240)">
+<rect x="-6" y="-6" width="12" height="12" style="fill:#ffffff; stroke:none"/>
+ <g id="grid"></g>
+ <g id="xyaxes" class="axes">
+ <line x1="-5.5" y1="0" x2="5.5" y2="0"/>
+ <line x1="0" y1="-5.5" x2="0" y2="5.5"/>
+ </g>
+ <g class="xlabels" transform="translate(0,-.4) scale(.01,-.01)" > 
+ <text x="100">1</text>
+ <text x="200">2</text>
+ <text x="300">3</text>
+ <text x="400">4</text>
+ <text x="500">5</text>
+ <text x="-100">-1</text>
+ <text x="-200">-2</text>
+ <text x="-300">-3</text>
+ <text x="-400">-4</text>
+ <text x="-500">-5</text>
+ </g>
+ <g class="ylabels" transform="translate(-.15,-.12) scale(.01,-.01)" > 
+ <text style="font-size:30px" y="-100">1</text>
+ <text y="-200">2</text>
+ <text y="-300">3</text>
+ <text y="-400">4</text>
+ <text y="-500">5</text>
+ <text y="100">-1</text>
+ <text y="200">-2</text>
+ <text y="300">-3</text>
+ <text y="400">-4</text>
+ <text y="500">-5</text>
+ </g>
+ <circle id="gPoint1" style="fill:rgb(0%, 50%, 70%);stroke:none" cx="3" cy="2" r=".11"/>
+ <circle id="gPoint2" style="fill:rgb(0%, 50%, 70%);stroke:none" cx="-3" cy="2" r=".11"/>
+ <line id="myLine" x1="-6" y1="2" x2="6" y2="2" 
+ style="stroke:rgb(0%, 50%, 70%);stroke-width:.05pt;"/>
+
+ <rect id="canvas" x="-5.4" y="-5.4" width="10.8" height="10.8" opacity="0" 
+ pointer-events="visible"
+ onmousedown="onMouseDown(evt)"
+ onmousemove="onMouseMove(evt)"
+ onmouseup="onMouseUp(evt)"/>
+</g>
+</svg>
